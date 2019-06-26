@@ -1,22 +1,25 @@
 <template>
 	<div class="cinema_body">
-		<ul>
-			<li v-for="item in cinemas">
-				<div>
-					<span>{{ item.nm }}</span>
-					<span class="q"><span class="price">{{ item.sellPrice }}</span> 元起</span>
-				</div>
-				<div class="address">
-					<span>{{ item.addr }}</span>
-					<span>{{ item.distance }}</span>
-				</div>
-				<div class="card">
-					<div v-for="(num,key) in item.tag" v-if="num===1" :key="key" :class='key | formateClass'>{{ key | formateCard }}</div>
-        			<!-- <div>小吃</div>
-        			<div>折扣卡</div> -->
-				</div>
-			</li>
-		</ul>
+		<Loading v-if="isLoading" />
+		<Scroller v-else>
+			<ul>
+				<li v-for="item in cinemas">
+					<div>
+						<span>{{ item.nm }}</span>
+						<span class="q"><span class="price">{{ item.sellPrice }}</span> 元起</span>
+					</div>
+					<div class="address">
+						<span>{{ item.addr }}</span>
+						<span>{{ item.distance }}</span>
+					</div>
+					<div class="card">
+						<div v-for="(num,key) in item.tag" v-if="num===1" :key="key" :class='key | formateClass'>{{ key | formateCard }}</div>
+	        			<!-- <div>小吃</div>
+	        			<div>折扣卡</div> -->
+					</div>
+				</li>
+			</ul>
+		</Scroller>
 	</div>
 </template>
 
@@ -26,15 +29,15 @@ export default {
   data(){
   	return {
   		cinemas:[],
-  		
+  		isLoading:true
   	}
   },
   mounted(){
   	this.axios.get('/api/cinemaList?cityId=10').then((res) => {
   		if(res.data.msg === 'ok'){
   			this.cinemas = res.data.data.cinemas
+  			this.isLoading = false
   		}
-  		console.log(res)
   	})
   },
   filters:{

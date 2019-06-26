@@ -1,5 +1,7 @@
 <template>
 	<div class="movie_body">
+		<Loading v-if="isLoading" />
+		<Scroller v-else>
 		<ul>
 			<li v-for="item in comingList">
 				<div class="pic_show"><img :src="item.img | setWH('128.180')"></div>
@@ -14,6 +16,7 @@
 				</div>
 			</li>
 		</ul>
+		</Scroller>
 	</div>
 </template>
 
@@ -22,13 +25,15 @@ export default {
   name: 'ComingSoon',
   data(){
   	return {
-  		comingList:[]
+  		comingList:[],
+  		isLoading:true
   	}
   },
   mounted(){
   	this.axios.get('/api/movieComingList?cityId=10').then((res) => {
   		if(res.data.msg === 'ok'){
   			this.comingList = res.data.data.comingList
+  			this.isLoading = false
   		}
   	})
   },
@@ -51,4 +56,5 @@ export default {
 	.movie_body .info_list img{ width:50px; position: absolute; right:10px; top: 5px;}
 	.movie_body .btn_mall , .movie_body .btn_pre{ width:47px; height:27px; line-height: 28px; text-align: center; background-color: #f03d37; color: #fff; border-radius: 4px; font-size: 12px; cursor: pointer;}
 	.movie_body .btn_pre{ background-color: #3c9fe6;}
+	.movie_body .pullDown{ margin: 0;padding: 0;border: none; }
 </style>
