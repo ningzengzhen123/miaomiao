@@ -29,14 +29,20 @@ export default {
   	return {
   		movieList:[],
   		message:'',
-      isLoading:true
+      isLoading:true,
+      prevCityId:-1
   	} 
   },
-  mounted(){
-  	this.axios.get('/api/movieOnInfoList?cityId=10').then((res) => {
+  activated(){
+    //获取城市ID
+    var cityId = this.$store.state.city.id
+    if( this.prevCityId === cityId){return;}
+    this.isLoading = true
+  	this.axios.get('/api/movieOnInfoList?cityId=' + cityId).then((res) => {
   		if(res.data.msg === 'ok'){
   			this.movieList = res.data.data.movieList
         this.isLoading = false
+        this.prevCityId = cityId
   		}
   	})
   },
